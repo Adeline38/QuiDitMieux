@@ -1,0 +1,22 @@
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+
+# Configuration des éditeurs
+.vscode/
+.idea/
+
+# Journaux et fichiers temporaires
+*.log
+*.tmp
+
+# Fichiers générés par le système
+.DS_Store
+Thumbs.db
+
+# Fichiers exclus pour ce projet
+/AGENTS.md
+/documents/cours/
+/documents/cahier des charges/cahier-des-charges-enrichi.md
+/documents/conceptualisation/Spécifications/Specifications.xlsx
