@@ -1,0 +1,82 @@
+// En-tête : variantes visiteur et utilisateur connecté de la maquette.
+
+@use "../abstracts/variables" as v;
+
+.en-tete-principal {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: v.$hauteur-en-tete;
+  padding: 0 24px;
+  gap: 18px;
+  background-color: v.$couleur-surface;
+  border-bottom: 1px solid v.$couleur-bordure;
+}
+
+.marque {
+  display: inline-flex;
+  flex: 0 0 190px;
+  align-items: center;
+  height: 40px;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 27px;
+}
+
+.marque__monogramme {
+  display: inline-flex;
+  flex: 0 0 36px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: v.$couleur-surface;
+  font-size: 18px;
+  line-height: 24px;
+  background-color: v.$couleur-principale;
+  border-radius: 9px;
+}
+
+.navigation-principale {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+.navigation-principale__lien,
+.navigation-principale__pseudo {
+  flex: 0 0 auto;
+  color: v.$couleur-texte;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 19px;
+  white-space: nowrap;
+}
+.navigation-principale__pseudo {text-transform: uppercase;}
+
+.navigation-principale__lien:hover,
+.navigation-principale__lien.est-actif {
+  color: v.$couleur-principale;
+}
+
+.navigation-principale__formulaire {
+  margin: 0;
+}
+
+@media (max-width: 980px) {
+  .en-tete-principal {
+    flex-wrap: wrap;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .navigation-principale {
+    flex-basis: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+

@@ -1,0 +1,29 @@
+// Conteneurs : largeur desktop de référence et panneaux principaux.
+
+@use "../abstracts/variables" as v;
+
+.cadre-application {
+  width: 100%;
+  max-width: v.$largeur-maquette;
+  min-height: 100vh;
+  margin: 0 auto;
+  overflow: hidden;
+  background-color: v.$couleur-fond;
+}
+
+.contenu-principal {
+  padding: 28px 40px 48px;
+}
+
+.panneau-principal {
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-panneau;
+}
+
+@media (max-width: 900px) {
+  .contenu-principal {
+    padding: 24px 20px 40px;
+  }
+}
+

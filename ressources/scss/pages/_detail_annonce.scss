@@ -1,0 +1,178 @@
+// Page détail d’annonce : galerie, informations, enchère et historique.
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+.page-detail-annonce {
+  display: grid;
+  grid-template-columns: minmax(420px, 1.2fr) minmax(340px, 1fr) 320px;
+  padding: 32px 28px;
+  gap: 20px;
+}
+
+.detail-annonce__informations,
+.detail-annonce__actions,
+.historique-encheres {
+  @include m.panneau;
+  padding: 18px;
+}
+
+.detail-annonce__introuvable {
+  grid-column: 1 / -1;
+  max-width: 680px;
+  margin: 50px auto;
+}
+
+.detail-annonce__retour {
+  margin-top: 18px;
+}
+
+.detail-annonce__titre-et-statut {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.detail-annonce__description {
+  margin-top: 12px;
+}
+
+.detail-annonce__prix {
+  padding: 16px;
+  margin: 14px 0;
+  color: v.$couleur-principale;
+  font-size: 24px;
+  font-weight: 700;
+  background-color: v.$couleur-principale-claire;
+  border-radius: v.$rayon-bouton;
+}
+
+.detail-annonce__prix span,
+.detail-annonce__prix strong {
+  display: block;
+}
+
+.detail-annonce__prix span {
+  margin-bottom: 4px;
+  color: v.$couleur-texte-secondaire;
+  color: v.$couleur-texte;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.detail-annonce__liste {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 20px;
+  color: v.$couleur-texte-secondaire;
+  font-size: 12px;
+}
+
+.detail-annonce__liste dd {
+  color: v.$couleur-texte;
+  font-weight: 600;
+  text-align: right;
+}
+
+.detail-annonce__actions h2 {
+  margin-bottom: 12px;
+}
+
+.detail-annonce__message-action,
+.detail-annonce__situation,
+.detail-annonce__formulaire-enchere,
+.detail-annonce__formulaire-suivi,
+.detail-annonce__gagnant {
+  margin-top: 16px;
+}
+
+.detail-annonce__formulaire-suivi .bouton {
+  width: 100%;
+}
+
+.detail-annonce__situation {
+  padding: 12px;
+  background-color: v.$couleur-zone-discrete;
+  border-radius: v.$rayon-petit;
+}
+
+.detail-annonce__situation--favorable {
+  color: v.$couleur-succes;
+  background-color: v.$couleur-succes-claire;
+}
+
+.detail-annonce__situation--depassee {
+  color: v.$couleur-erreur;
+  background-color: v.$couleur-erreur-claire;
+}
+
+.detail-annonce__action-principale {
+  margin-top: 18px;
+}
+
+.detail-annonce__champ-montant {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-annonce__formulaire-enchere button:disabled,
+.detail-annonce__formulaire-enchere input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.detail-annonce__actions .historique-encheres {
+  padding: 20px 0 0;
+  margin-top: 24px;
+  border-top: 1px solid v.$couleur-bordure;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.historique-encheres__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historique-encheres__ligne {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 10px 0;
+  gap: 12px;
+  border-bottom: 1px solid v.$couleur-bordure;
+}
+
+.historique-encheres__ligne div,
+.historique-encheres__ligne time {
+  display: block;
+}
+
+.historique-encheres__ligne time {
+  margin-top: 3px;
+  color: v.$couleur-texte-secondaire;
+  font-size: 11px;
+}
+
+@media (max-width: 1100px) {
+  .page-detail-annonce {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .detail-annonce__actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .page-detail-annonce {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-annonce__actions {
+    grid-column: auto;
+  }
+}

@@ -1,0 +1,231 @@
+// Page création et modification : deux panneaux et gestion des photographies.
+
+@use "../abstracts/mixins" as m;
+@use "../abstracts/variables" as v;
+
+.page-annonce {
+  display: grid;
+  grid-template-columns: minmax(0, 620px) minmax(0, 680px);
+  padding: 38px 40px 48px;
+  gap: 60px;
+}
+
+.annonce__informations,
+.annonce__date-et-photos {
+  @include m.panneau;
+  min-height: 760px;
+  padding: 30px;
+}
+
+.annonce__informations {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.annonce__date-et-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.annonce__titre {
+  font-size: 28px;
+  line-height: 38px;
+}
+
+.annonce__introduction {
+  margin-bottom: 2px;
+  color: v.$couleur-texte-secondaire;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.annonce__informations .message {
+  padding: 14px;
+}
+
+.annonce__etat-et-prix {
+  margin-top: 0;
+}
+
+.annonce__date-et-heure {
+  gap: 20px;
+}
+
+.annonce__photographies {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.annonce__emplacements-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 178px));
+  gap: 12px;
+}
+
+.annonce__ajout-photo,
+.annonce__photo-selectionnee {
+  min-width: 0;
+  height: 150px;
+  overflow: hidden;
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-image;
+}
+
+.annonce__ajout-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: v.$couleur-texte-secondaire;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 15px;
+  cursor: pointer;
+}
+
+.annonce__ajout-photo:hover {
+  color: v.$couleur-principale;
+  border-color: v.$couleur-principale;
+}
+
+.annonce__ajout-photo-symbole {
+  font-size: 30px;
+  line-height: 41px;
+}
+
+.annonce__photo-selectionnee {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.annonce__photo-selectionnee.est-principale {
+  border-color: v.$couleur-principale;
+  box-shadow: 0 0 0 2px rgb(255 20 91 / 15%);
+}
+
+.annonce__choix-photo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  background: v.$couleur-zone-discrete;
+  border: 0;
+}
+
+.annonce__choix-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.annonce__statut-photo {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  left: 6px;
+  padding: 4px 6px;
+  color: v.$couleur-surface;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  background-color: rgb(29 30 32 / 80%);
+  border-radius: 6px;
+}
+
+.annonce__photo-selectionnee.est-principale .annonce__statut-photo {
+  background-color: v.$couleur-principale;
+}
+
+.annonce__supprimer-photo {
+  display: flex;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-erreur;
+  font-size: 11px;
+  font-weight: 700;
+  background-color: v.$couleur-surface;
+  border: 0;
+  border-top: 1px solid v.$couleur-bordure;
+  cursor: pointer;
+}
+
+.annonce__photo-selectionnee.est-supprimee {
+  opacity: 0.58;
+  border-style: dashed;
+}
+
+.annonce__photo-selectionnee.est-supprimee .annonce__statut-photo {
+  background-color: v.$couleur-erreur;
+}
+
+.annonce__photo-indisponible {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-texte-secondaire;
+  font-size: 11px;
+}
+
+.annonce__rappel {
+  width: 100%;
+  min-height: 108px;
+}
+
+.annonce__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.annonce__bouton-publication {
+  width: 210px;
+}
+
+.confirmation-suppression {
+  width: min(520px, calc(100% - 40px));
+  padding: 28px;
+  color: v.$couleur-texte;
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-panneau;
+}
+
+.confirmation-suppression::backdrop {
+  background-color: rgb(29 30 32 / 55%);
+}
+
+@media (max-width: 980px) {
+  .page-annonce {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .annonce__informations,
+  .annonce__date-et-photos {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .page-annonce {
+    padding: 24px 20px 40px;
+  }
+
+  .annonce__emplacements-photos {
+    grid-template-columns: 1fr;
+  }
+
+  .annonce__ajout-photo,
+  .annonce__photo-selectionnee {
+    width: 100%;
+  }
+}

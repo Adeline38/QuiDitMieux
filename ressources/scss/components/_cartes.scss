@@ -1,0 +1,174 @@
+// Cartes : annonces des résultats et lignes compactes du tableau de bord.
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+.carte-annonce {
+  @include m.panneau;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.carte-annonce:hover {
+  border-color: v.$couleur-principale;
+}
+
+.carte-annonce__photo {
+  width: 100%;
+  height: 172px;
+  object-fit: cover;
+  border-radius: v.$rayon-image;
+}
+
+.carte-annonce__photo-absente {
+  display: flex;
+  width: 100%;
+  height: 172px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-texte-secondaire;
+  font-size: 12px;
+  background-color: v.$couleur-zone-discrete;
+  border-radius: v.$rayon-image;
+}
+
+.carte-annonce__contenu {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  gap: 8px;
+}
+
+.carte-annonce__titre {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.carte-annonce__categorie,
+.carte-annonce__metadonnees {
+  color: v.$couleur-texte-secondaire;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.carte-annonce__pied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.carte-annonce__prix {
+  color: v.$couleur-principale;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 23px;
+}
+
+.carte-tableau {
+  @include m.panneau;
+  display: grid;
+  flex: 0 0 400px;
+  flex: 0 0 48%;
+  grid-template-columns: 126px minmax(0, 1fr);
+  width: 400px;
+  min-height: 132px;
+  padding: 12px;
+  gap: 12px;
+}
+
+.carte-tableau__photo {
+  width: 126px;
+  height: 108px;
+  object-fit: cover;
+  border-radius: v.$rayon-image;
+}
+
+.carte-tableau__photo--absente {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-texte-secondaire;
+  font-size: 11px;
+  background-color: v.$couleur-zone-discrete;
+}
+
+.carte-tableau__informations {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.carte-tableau__titre {
+  width: 100%;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.carte-tableau__titre a:hover,
+.carte-tableau__actions a:hover,
+.carte-tableau__actions button:hover,
+.carte-tableau__suivi button:hover {
+  color: v.$couleur-principale;
+}
+
+.carte-tableau__prix {
+  color: v.$couleur-principale;
+  font-size: 17px;
+}
+
+.carte-tableau__metadonnees {
+  color: v.$couleur-texte-secondaire;
+  font-size: 11px;
+}
+
+.carte-tableau__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.carte-tableau__actions form,
+.carte-tableau__suivi {
+  margin: 0;
+}
+
+.carte-tableau__actions button,
+.carte-tableau__suivi button {
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  background: transparent;
+}
+
+.carte-tableau__actions form::before {
+  content: "· ";
+}
+
+.carte-tableau__suivi button {
+  color: v.$couleur-texte-secondaire;
+}
+
+.carte-tableau--positive {
+  border-color: v.$couleur-succes;
+  /* background: v.$couleur-succes-claire; */ 
+}
+
+.carte-tableau--negative {
+  border-color: v.$couleur-erreur;
+  /* background: v.$couleur-erreur-claire;  */
+}

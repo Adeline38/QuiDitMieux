@@ -1,0 +1,134 @@
+// Page accueil et recherche : filtres latéraux, résultats et pagination.
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+.page-accueil {
+  padding: 22px 28px 32px;
+}
+
+.page-accueil__message {
+  margin-bottom: 18px;
+}
+
+.filtres-recherche {
+  @include m.panneau;
+  display: flex;
+  min-height: 842px;
+  padding: 22px;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.filtres-recherche__titre {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.filtres-recherche__entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filtres-recherche__reinitialisation {
+  color: v.$couleur-texte-discret;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.filtres-recherche__reinitialisation:hover {
+  color: v.$couleur-principale;
+}
+
+.resultats-recherche {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resultats-recherche__entete {
+  min-height: 52px;
+}
+
+.resultats-recherche__description {
+  color: v.$couleur-texte-secondaire;
+  font-size: 12px;
+}
+
+.resultats-recherche__etat {
+  display: flex;
+  min-height: 650px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+}
+
+.resultats-recherche__etat .message__titre {
+  margin-bottom: 0;
+  color: v.$couleur-texte;
+  font-size: 20px;
+}
+
+.resultats-recherche__icone-vide {
+  display: inline-flex;
+  width: 64px;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-principale;
+  font-size: 42px;
+  background-color: v.$couleur-principale-claire;
+  border-radius: 50%;
+}
+
+.pagination {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pagination__lien {
+  display: inline-flex;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 8px 12px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-texte;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-petit;
+}
+
+.pagination__lien:hover,
+.pagination__lien.est-active {
+  color: v.$couleur-surface;
+  background-color: v.$couleur-principale;
+  border-color: v.$couleur-principale;
+}
+
+.pagination__lien.est-desactive {
+  color: v.$couleur-texte-secondaire;
+  background-color: v.$couleur-zone-discrete;
+}
+
+@media (max-width: 760px) {
+  .filtres-recherche {
+    min-height: auto;
+  }
+
+  .resultats-recherche__etat {
+    min-height: 360px;
+  }
+}

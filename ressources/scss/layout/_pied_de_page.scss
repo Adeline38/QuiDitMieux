@@ -1,0 +1,13 @@
+// Pied de page : zone facultative prévue pour les informations légales.
+
+@use "../abstracts/variables" as v;
+
+.pied-de-page {
+  padding: 24px 40px;
+  color: v.$couleur-texte-secondaire;
+  font-size: 12px;
+  text-align: center;
+  background-color: v.$couleur-surface;
+  border-top: 1px solid v.$couleur-bordure;
+}
+

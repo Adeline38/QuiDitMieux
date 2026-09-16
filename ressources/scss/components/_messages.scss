@@ -1,0 +1,41 @@
+// Messages : retours de validation, rappels et informations fonctionnelles.
+
+@use "../abstracts/variables" as v;
+
+.message {
+  padding: 18px;
+  color: v.$couleur-texte;
+  background-color: v.$couleur-principale-claire;
+  border-radius: v.$rayon-bouton;
+}
+
+.message__titre {
+  margin-bottom: 8px;
+  color: v.$couleur-principale;
+  font-weight: 700;
+}
+
+.message--succes {
+  background-color: v.$couleur-succes-claire;
+}
+
+.message--succes .message__titre {
+  color: v.$couleur-succes;
+}
+
+.message--erreur {
+  background-color: v.$couleur-erreur-claire;
+}
+
+.message--erreur .message__titre {
+  color: v.$couleur-erreur;
+}
+
+.message--avertissement {
+  background-color: v.$couleur-avertissement-claire;
+}
+
+.message--avertissement .message__titre {
+  color: v.$couleur-avertissement;
+}
+

@@ -1,0 +1,59 @@
+// Boutons : actions principales, secondaires et dangereuses.
+
+@use "../abstracts/variables" as v;
+
+.bouton {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 12px 22px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-surface;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 19px;
+  text-align: center;
+  background-color: v.$couleur-principale;
+  border: 1px solid v.$couleur-principale;
+  border-radius: v.$rayon-bouton;
+}
+
+.bouton:hover {
+  filter: brightness(0.96);
+}
+
+.bouton--contour {
+  color: v.$couleur-principale;
+  background-color: v.$couleur-surface;
+}
+
+.bouton--danger {
+  color: v.$couleur-surface;
+  background-color: v.$couleur-erreur;
+  border-color: v.$couleur-erreur;
+}
+
+.bouton--large {
+  width: 100%;
+}
+
+.bouton--connexion {
+  width: 120px;
+}
+
+.bouton--inscription,
+.bouton--deconnexion {
+  width: 130px;
+}
+
+.bouton--publication {
+  width: 180px;
+}
+
+.bouton:disabled,
+.bouton.est-desactive {
+  color: v.$couleur-texte-secondaire;
+  background-color: v.$couleur-zone-discrete;
+  border-color: v.$couleur-zone-discrete;
+  filter: none;
+}

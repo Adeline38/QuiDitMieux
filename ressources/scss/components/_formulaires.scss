@@ -1,0 +1,105 @@
+// Formulaires : champs, libellés, aides et groupes de contrôles.
+
+@use "../abstracts/variables" as v;
+
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.champ__libelle {
+  color: v.$couleur-texte;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.champ__saisie {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  color: v.$couleur-texte;
+  font-size: 13px;
+  line-height: 18px;
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-petit;
+}
+
+textarea.champ__saisie {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.champ__saisie::placeholder,
+.champ__aide {
+  color: v.$couleur-texte-secondaire;
+}
+
+.champ__aide,
+.champ__erreur {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.champ__erreur {
+  color: v.$couleur-erreur;
+  font-weight: 600;
+}
+
+.champ.est-invalide .champ__saisie {
+  border-color: v.$couleur-erreur;
+}
+
+.groupe-champs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.choix-segmente {
+  display: flex;
+  padding: 4px;
+  background-color: v.$couleur-zone-discrete;
+  border-radius: 9px;
+}
+
+.choix-segmente__option {
+  flex: 1 1 0;
+  min-height: 30px;
+  padding: 7px 8px;
+  color: v.$couleur-texte-secondaire;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.choix-segmente__option.est-active {
+  color: v.$couleur-principale;
+  background-color: v.$couleur-surface;
+}
+
+.choix-segmente__option:focus-within {
+  outline: 2px solid v.$couleur-principale;
+  outline-offset: 2px;
+}
+
+.groupe-statut {
+  padding: 0;
+  border: 0;
+}
+
+@media (max-width: 620px) {
+  .groupe-champs {
+    grid-template-columns: 1fr;
+  }
+}

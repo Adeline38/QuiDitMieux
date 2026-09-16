@@ -1,0 +1,31 @@
+// Base du document : fond général, sélection de texte et aides d’accessibilité.
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+body {
+  min-height: 100vh;
+  background-color: v.$couleur-fond;
+}
+
+::selection {
+  color: v.$couleur-surface;
+  background-color: v.$couleur-principale;
+}
+
+:focus-visible {
+  @include m.focus-visible;
+}
+
+.texte-visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+

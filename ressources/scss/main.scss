@@ -1,0 +1,29 @@
+// Point d’entrée du pattern 7-1 : assemble tous les fichiers SCSS du projet.
+
+@use "vendors/normalisation";
+
+@use "base/reinitialisation";
+@use "base/typographie";
+@use "base/base";
+
+@use "layout/conteneurs";
+@use "layout/en_tete";
+@use "layout/grilles";
+@use "layout/pied_de_page";
+
+@use "components/boutons";
+@use "components/formulaires";
+@use "components/cartes";
+@use "components/etiquettes";
+@use "components/messages";
+@use "components/galerie";
+
+@use "pages/accueil";
+@use "pages/detail_annonce";
+@use "pages/authentification";
+@use "pages/profil";
+@use "pages/annonce";
+@use "pages/tableau_de_bord";
+
+@use "themes/theme_defaut";
+

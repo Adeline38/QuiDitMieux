@@ -1,0 +1,12 @@
+// Thème par défaut : variantes d’état appliquées à l’ensemble de l’application.
+
+@use "../abstracts/variables" as v;
+
+.est-mis-en-avant {
+  color: v.$couleur-principale;
+}
+
+.est-indisponible {
+  opacity: 0.6;
+}
+

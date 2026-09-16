@@ -1,0 +1,15 @@
+// Mixins : règles réutilisées pour les panneaux et la navigation au clavier.
+
+@use "variables" as v;
+
+@mixin panneau {
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-panneau;
+}
+
+@mixin focus-visible {
+  outline: 3px solid rgb(255 20 91 / 35%);
+  outline-offset: 3px;
+}
+

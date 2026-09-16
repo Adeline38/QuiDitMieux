@@ -1,0 +1,129 @@
+// Pages inscription et connexion : panneau rose et formulaire centré.
+
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+.page-authentification {
+  display: grid;
+  grid-template-columns: 470px minmax(0, 1fr);
+  min-height: calc(100vh - 32px);
+  background-color: v.$couleur-fond;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.presentation-authentification {
+  display: flex;
+  padding: 48px;
+  flex-direction: column;
+  color: v.$couleur-surface;
+  background-color: v.$couleur-principale;
+}
+
+.presentation-authentification__monogramme {
+  display: flex;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 24px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-principale;
+  font-size: 20px;
+  font-weight: 700;
+  background-color: v.$couleur-surface;
+  border-radius: v.$rayon-bouton;
+}
+
+.presentation-authentification__titre {
+  max-width: 320px;
+  margin-bottom: 18px;
+  font-size: 34px;
+  line-height: 1.35;
+}
+
+.presentation-authentification > p {
+  max-width: 330px;
+  font-size: 16px;
+}
+
+.presentation-authentification__rappel {
+  padding: 22px;
+  margin-top: auto;
+  color: v.$couleur-texte;
+  background-color: rgb(255 255 255 / 48%);
+  border-radius: v.$rayon-panneau;
+}
+
+.presentation-authentification__rappel strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.presentation-authentification__rappel p + p {
+  margin-top: 7px;
+}
+
+.zone-authentification {
+  display: flex;
+  padding: 70px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.formulaire-authentification {
+  @include m.panneau;
+  width: min(100%, 700px);
+  min-height: 760px;
+  padding: 48px;
+}
+
+.formulaire-authentification h2 {
+  margin-bottom: 14px;
+  font-size: 30px;
+}
+
+.formulaire-authentification__introduction {
+  margin-bottom: 22px;
+  color: v.$couleur-texte-secondaire;
+}
+
+.formulaire-authentification__message {
+  margin-bottom: 20px;
+}
+
+.formulaire-authentification__bouton {
+  align-self: flex-start;
+  min-width: 210px;
+}
+
+.formulaire-authentification__navigation {
+  margin-top: 18px;
+  color: v.$couleur-principale;
+  font-weight: 700;
+}
+
+.formulaire-authentification__navigation a {
+  color: inherit;
+}
+
+.formulaire-authentification--connexion {
+  min-height: 620px;
+}
+
+@media (max-width: 900px) {
+  .page-authentification {
+    grid-template-columns: 1fr;
+  }
+
+  .presentation-authentification {
+    min-height: 340px;
+  }
+
+  .zone-authentification {
+    padding: 32px 20px;
+  }
+
+  .formulaire-authentification {
+    min-height: auto;
+  }
+}

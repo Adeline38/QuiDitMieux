@@ -1,0 +1,21 @@
+// Normalisation légère : rend les contrôles de formulaire cohérents entre navigateurs.
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+

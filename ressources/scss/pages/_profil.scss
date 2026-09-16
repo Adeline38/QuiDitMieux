@@ -1,0 +1,47 @@
+// Page gestion du compte : titre, explication et formulaire personnel.
+
+@use "../abstracts/mixins" as m;
+
+.page-profil {
+  padding: 36px 48px 80px;
+}
+
+.page-profil__entete {
+  margin-bottom: 40px;
+}
+
+.page-profil__entete p {
+  margin-top: 2px;
+}
+
+.formulaire-profil {
+  @include m.panneau;
+  width: min(100%, 720px);
+  min-height: 600px;
+  padding: 40px;
+  margin: 0 auto;
+}
+
+.formulaire-profil__message {
+  margin-bottom: 22px;
+}
+
+.formulaire-profil__bouton {
+  align-self: flex-start;
+  min-width: 260px;
+}
+
+@media (max-width: 620px) {
+  .page-profil {
+    padding: 28px 20px 56px;
+  }
+
+  .formulaire-profil {
+    min-height: auto;
+    padding: 28px 20px;
+  }
+
+  .formulaire-profil__bouton {
+    width: 100%;
+  }
+}

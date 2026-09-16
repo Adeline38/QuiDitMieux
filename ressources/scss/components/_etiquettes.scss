@@ -1,0 +1,34 @@
+// Étiquettes : états de vente et positions de l’utilisateur.
+
+@use "../abstracts/variables" as v;
+
+.etiquette {
+  display: inline-flex;
+  min-width: 104px;
+  min-height: 26px;
+  padding: 5px 10px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-principale;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+  background-color: v.$couleur-principale-claire;
+  border-radius: 13px;
+}
+
+.etiquette--positive {
+  color: v.$couleur-succes;
+  background-color: v.$couleur-succes-claire;
+}
+
+.etiquette--negative {
+  color: v.$couleur-erreur;
+  background-color: v.$couleur-erreur-claire;
+}
+
+.etiquette--neutre {
+  color: v.$couleur-texte-secondaire;
+  background-color: v.$couleur-zone-discrete;
+}
+

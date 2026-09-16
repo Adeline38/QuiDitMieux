@@ -1,0 +1,60 @@
+// Galerie : image principale, miniatures et emplacements de téléversement.
+
+@use "../abstracts/variables" as v;
+
+.galerie__image-principale {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: v.$rayon-image;
+}
+
+.galerie__miniatures,
+.photos-annonce {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.galerie__photo-absente {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-texte-secondaire;
+  background-color: v.$couleur-zone-discrete;
+  border-radius: v.$rayon-image;
+}
+
+.galerie__commande {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: v.$rayon-petit;
+  cursor: pointer;
+}
+
+.galerie__miniature {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: v.$rayon-petit;
+}
+
+.galerie__commande.est-active .galerie__miniature {
+  border-color: v.$couleur-principale;
+}
+
+.photos-annonce__emplacement {
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  justify-content: center;
+  color: v.$couleur-texte-secondaire;
+  text-align: center;
+  background-color: v.$couleur-surface;
+  border: 1px solid v.$couleur-bordure;
+  border-radius: v.$rayon-bouton;
+}
