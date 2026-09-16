@@ -1,10 +1,13 @@
 # Configuration locale et secrets
+config.php
+!config.example.php
 .env
 .env.*
 !.env.example
 
 # Configuration des éditeurs
 .vscode/
+.vscode/command-buttons.json
 .idea/
 
 # Journaux et fichiers temporaires
@@ -16,7 +19,4 @@
 Thumbs.db
 
 # Fichiers exclus pour ce projet
-/AGENTS.md
 /documents/cours/
-/documents/cahier des charges/cahier-des-charges-enrichi.md
-/documents/conceptualisation/Spécifications/Specifications.xlsx
