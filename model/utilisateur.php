@@ -7,7 +7,7 @@
 class utilisateur extends _model
 {
     // La table et ses colonnes correspondent exactement au MPD et à la structure MySQL contrôlée.
-    protected $table = 'UTILISATEUR';
+    protected $table = 'utilisateur';
     protected $fields = [
         'pseudo',
         'email',

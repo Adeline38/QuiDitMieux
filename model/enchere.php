@@ -7,7 +7,7 @@
 class enchere extends _model
 {
     // Ces informations relient ce modèle à la table ENCHERE et limitent les colonnes qu'il peut manipuler.
-    protected $table = 'ENCHERE';
+    protected $table = 'enchere';
 
     protected $fields = [
         'montant',
@@ -23,15 +23,15 @@ class enchere extends _model
         
         // La jointure conserve l'annonce même sans enchère et utilise l'heure MySQL comme référence commune pour sa fin.
         $sql = "SELECT
-                    COUNT(`ENCHERE`.`id`) AS `nombre_encheres`,
-                    MAX(`ENCHERE`.`montant`) AS `prix_courant`,
-                    MAX(`ENCHERE`.`date_heure`) AS `derniere_enchere`,
-                    (`ANNONCE`.`date_heure_fin` > NOW()) AS `vente_ouverte`
-                FROM `ANNONCE`
-                LEFT JOIN `ENCHERE`
-                    ON `ENCHERE`.`annonce_id` = `ANNONCE`.`id`
-                WHERE `ANNONCE`.`id` = :annonce_id
-                GROUP BY `ANNONCE`.`id`, `ANNONCE`.`date_heure_fin`";
+                    COUNT(`enchere`.`id`) AS `nombre_encheres`,
+                    MAX(`enchere`.`montant`) AS `prix_courant`,
+                    MAX(`enchere`.`date_heure`) AS `derniere_enchere`,
+                    (`annonce`.`date_heure_fin` > NOW()) AS `vente_ouverte`
+                FROM `annonce`
+                LEFT JOIN `enchere`
+                    ON `enchere`.`annonce_id` = `annonce`.`id`
+                WHERE `annonce`.`id` = :annonce_id
+                GROUP BY `annonce`.`id`, `annonce`.`date_heure_fin`";
 
         // L'identifiant reste séparé du texte SQL afin que PDO le transmette comme paramètre préparé.
         $parametres = [
@@ -49,16 +49,16 @@ class enchere extends _model
 
         // Le tri place le montant le plus élevé en premier ; la limite évite de charger les autres enchères.
         $sql = "SELECT
-                    `ENCHERE`.`id` AS `id`,
-                    `ENCHERE`.`montant` AS `montant`,
-                    `ENCHERE`.`date_heure` AS `date_heure`,
-                    `ENCHERE`.`utilisateur_id` AS `utilisateur_id`,
-                    `UTILISATEUR`.`pseudo` AS `pseudo`
-                FROM `ENCHERE`
-                INNER JOIN `UTILISATEUR`
-                    ON `UTILISATEUR`.`id` = `ENCHERE`.`utilisateur_id`
-                WHERE `ENCHERE`.`annonce_id` = :annonce_id
-                ORDER BY `ENCHERE`.`montant` DESC
+                    `enchere`.`id` AS `id`,
+                    `enchere`.`montant` AS `montant`,
+                    `enchere`.`date_heure` AS `date_heure`,
+                    `enchere`.`utilisateur_id` AS `utilisateur_id`,
+                    `utilisateur`.`pseudo` AS `pseudo`
+                FROM `enchere`
+                INNER JOIN `utilisateur`
+                    ON `utilisateur`.`id` = `enchere`.`utilisateur_id`
+                WHERE `enchere`.`annonce_id` = :annonce_id
+                ORDER BY `enchere`.`montant` DESC
                 LIMIT 1";
 
         return $this->sqlToLigne($sql, [
@@ -73,7 +73,7 @@ class enchere extends _model
         
         // COUNT permet de répondre sans transmettre les montants ou les autres participants.
         $sql = "SELECT COUNT(`id`) AS `nombre`
-                FROM `ENCHERE`
+                FROM `enchere`
                 WHERE `annonce_id` = :annonce_id
                 AND `utilisateur_id` = :utilisateur_id";
 
@@ -96,14 +96,14 @@ class enchere extends _model
 
         // La jointure récupère uniquement le pseudo public de chaque enchérisseur, jamais son courriel.
         $sql = "SELECT
-                    `UTILISATEUR`.`pseudo` AS `pseudo`,
-                    `ENCHERE`.`montant` AS `montant`,
-                    `ENCHERE`.`date_heure` AS `date_heure`
-                FROM `ENCHERE`
-                INNER JOIN `UTILISATEUR`
-                    ON `UTILISATEUR`.`id` = `ENCHERE`.`utilisateur_id`
-                WHERE `ENCHERE`.`annonce_id` = :annonce_id
-                ORDER BY `ENCHERE`.`date_heure` DESC, `ENCHERE`.`id` DESC";
+                    `utilisateur`.`pseudo` AS `pseudo`,
+                    `enchere`.`montant` AS `montant`,
+                    `enchere`.`date_heure` AS `date_heure`
+                FROM `enchere`
+                INNER JOIN `utilisateur`
+                    ON `utilisateur`.`id` = `enchere`.`utilisateur_id`
+                WHERE `enchere`.`annonce_id` = :annonce_id
+                ORDER BY `enchere`.`date_heure` DESC, `enchere`.`id` DESC";
 
         $requete = $this->execute($sql, [
             ':annonce_id' => $annonce_id
@@ -138,7 +138,7 @@ class enchere extends _model
                             `prix_depart`,
                             `utilisateur_id`,
                             (`date_heure_fin` > NOW()) AS `vente_ouverte`
-                        FROM `ANNONCE`
+                        FROM `annonce`
                         WHERE `id` = :annonce_id
                         FOR UPDATE";
 
@@ -164,7 +164,7 @@ class enchere extends _model
 
         // La meilleure enchère est relue pendant la transaction pour obtenir le véritable prix courant.
         $sql_meilleure = "SELECT `montant`, `utilisateur_id`
-                          FROM `ENCHERE`
+                          FROM `enchere`
                           WHERE `annonce_id` = :annonce_id
                           ORDER BY `montant` DESC
                           LIMIT 1";
@@ -194,7 +194,7 @@ class enchere extends _model
 
         // La première participation doit aussi créer le suivi prévu par le cahier des charges.
         $sql_participation = "SELECT COUNT(`id`) AS `nombre`
-                              FROM `ENCHERE`
+                              FROM `enchere`
                               WHERE `annonce_id` = :annonce_id
                               AND `utilisateur_id` = :utilisateur_id";
 
@@ -211,7 +211,7 @@ class enchere extends _model
         $premiere_participation = (int) $participation['nombre'] === 0;
 
         // Toutes les valeurs variables restent séparées du SQL dans des paramètres préparés.
-        $sql_insertion = "INSERT INTO `ENCHERE`
+        $sql_insertion = "INSERT INTO `enchere`
                             (`montant`, `date_heure`, `annonce_id`, `utilisateur_id`)
                           VALUES
                             (:montant, NOW(), :annonce_id, :utilisateur_id)";
@@ -230,7 +230,7 @@ class enchere extends _model
         // La première enchère ajoute le suivi seulement s'il n'existait pas déjà volontairement.
         if ($premiere_participation === true) {
             $sql_suivi_existant = "SELECT COUNT(`id`) AS `nombre`
-                                    FROM `ASSO_UTILISATEUR_ANNONCE`
+                                    FROM `asso_utilisateur_annonce`
                                     WHERE `annonce_id` = :annonce_id
                                     AND `utilisateur_id` = :utilisateur_id";
 
@@ -245,7 +245,7 @@ class enchere extends _model
             }
 
             if ((int) $suivi_existant['nombre'] === 0) {
-                $sql_suivi = "INSERT INTO `ASSO_UTILISATEUR_ANNONCE`
+                $sql_suivi = "INSERT INTO `asso_utilisateur_annonce`
                                 (`annonce_id`, `utilisateur_id`)
                               VALUES
                                 (:annonce_id, :utilisateur_id)";

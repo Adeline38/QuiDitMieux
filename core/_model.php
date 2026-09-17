@@ -253,28 +253,6 @@ class _model {
         }
     }
 
-    /* Exemple simple 'function estDansTableau()' pour comprendre in_array()
-     * Cette fonction ferait presque le même travail à la main
-     * Elle n'est pas exécutée, car elle se trouve dans un commentaire
-     * 
-    function estDansTableau($valeur, $tableau) {
-        // Rôle : indiquer si une valeur est dans un tableau (est un élement du tableau)
-        // Paramètres :
-        //      $valeur : valeur cherchée
-        //      $tableau : tableau dasn lequel chercher
-
-        // On regarde chaque case du tableau, pour chque élément du tableau
-        foreach($tableau as $cellule) {
-          // Si cette case contient la valeur cherchée, on a trouvé
-          if ($cellule == $valeur) {
-                return true;
-            }
-        }
-        // Le tableau entier a été parcouru sans trouver la valeur
-        return false;
-    }
-    */
-
 
     // SETTERS : MODIFIER LES CHAMPS
     public function set($nomChamp, $valeur)  {
@@ -420,21 +398,6 @@ class _model {
 
         return true;
     }
-    
-    // RÉCUPERATION DE LISTE(S)
-    public function listAll() {
-        // Rôle : Lister toutes les lignes de la table du modèle enfant sous forme d'objets
-        // Paramètres : Aucun paramètre n'est nécessaire
-        // Retour : Un tableau d'objets du modèle enfant indexé par leur identifiant
-
-        // Sans WHERE, le SELECT demande toutes les lignes de la table
-        $sql = "SELECT " . $this->listFieldsForSelect() . " FROM `$this->table`";
-        $param = [  ];
-
-        // sqlToTab() exécute la requête et transforme ses lignes en objets
-        // on fabrique un tableau d'objets à partir de cette requête
-        return $this->sqlToTab($sql, $param);
-    }
 
     // UTILES POUR SELECT
 
@@ -467,70 +430,24 @@ class _model {
         // implode() rassemble les cases avec une virgule entre chacune
         return implode(",", $tab);
     }
+  
+    protected function modif($tab) {
+        // Rôle : Modifier plusieurs champs autorisés d'un objet déjà chargé.
+        // Paramètres : $tab associe chaque champ autorisé à sa nouvelle valeur.
+        // Retour : true si tous les champs sont valides et enregistrés, sinon false.
 
-    public function findBy($champ, $valeur) {
-        // Rôle :  Trouver un objet (une ligne) grâce à la valeur de l'un de ses champs
-        // Paramètres : $champ contient le nom de la colonne et $valeur contient la valeur recherchée
-        //      $champ : nom de la colonne dans laquelle chercher
-        //      $valeur : valeur recherchée dans cette colonne
-        // Retour : Un objet rempli si une ligne est trouvée, sinon false
-
-        // Un nom de colonne ne peut pas être protégé par un paramètre PDO.
-        // Il doit donc appartenir à la liste des colonnes autorisées du modèle.
-        $champs_autorises = $this->fields;
-        $champs_autorises[] = 'id';
-
-        if (!in_array($champ, $champs_autorises, true)) {
+        // Une modification exige un objet chargé depuis la base de données.
+        if (!$this->is()) {
             return false;
         }
 
-        // Construction de la requête
-        // On demande les lignes dont le champ contient la valeur recherchée
-        $sql = "SELECT ".$this->listFieldsForSelect()."
-            FROM `$this->table`
-            WHERE `$champ` = :valeur
-        ";
-
-        // :valeur sera remplacé par $valeur pendant l'exécution
-        $param = [":valeur" => $valeur];
-
-        // On prépare et on exécute la requête
-        $req = $this->execute($sql, $param);
-
-        // On arrête si la requête n'a pas pu être préparée
-        if ($req === false) return false;
-
-        // On lit uniquement la première ligne trouvée
-        $ligne = $req->fetch(PDO::FETCH_ASSOC);
-
-        // fetch() retourne false lorsqu'il n'y a aucune ligne
-        if ($ligne === false) return false;
-
-        // On crée un objet de la classe qui a appelé cette méthode, création d'un objet de la classe courante
-        $objet = new static();
-
-        // On remplit l'objet avec les données trouvées, chargement des données
-        $objet->loadFromTab($ligne);
-
-        // On retourne l'objet maintenant prêt à être utilisé
-        return $objet;
-    }
-  
-    public function modif($tab) {
-        // Rôle : Modifier plusieurs champs autorisés de l'objet courant, puis enregistrer les modifications de l'objet dans la BDD
-        // Paramètres : $tab contient les noms des champs et leurs nouvelles valeurs ($tab associe chaque nom de champ à sa nouvelle valeur)
-        // Exemple : ["pseudo" => "Lina", "email" => "l@exemplefr"]
-        // Retour : true si la modification est enregistrée, sinon false.
-
-        // Chaque clé est un nom de champ et chaque élément est sa nouvelle valeur
-        // Parcourir le tableau des nouvelles valeurs
+        // Chaque champ doit appartenir à la liste définie dans le modèle enfant.
         foreach ($tab as $champ => $valeur) {
-            // Affecter la nouvelle valeur à l'objet
-            $this->set($champ, $valeur);
+            if (!$this->set($champ, $valeur)) {
+                return false;
+            }
         }
 
-        // update() enregistre toutes les valeurs actuelles de l'objet
-        // Enregistrerles modifications
         return $this->update();
     }
 }

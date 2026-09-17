@@ -7,7 +7,7 @@
 class annonce extends _model
 {
     // Ces informations relient ce modèle à la table ANNONCE et limitent les colonnes qu'il peut manipuler.
-    protected $table = 'ANNONCE';
+    protected $table = 'annonce';
 
     protected $fields = [
         'titre',
@@ -85,24 +85,24 @@ class annonce extends _model
         // La sous-requête trouve la dernière enchère de chaque annonce et écarte automatiquement les annonces sans enchère.
         // La condition sur la fin de vente conserve uniquement les ventes ouvertes, puis LIMIT respecte les six cartes prévues.
         $sql = "SELECT
-                    `ANNONCE`.`id` AS `id`,
-                    `ANNONCE`.`titre` AS `titre`,
-                    `ANNONCE`.`description` AS `description`,
-                    `ANNONCE`.`etat` AS `etat`,
-                    `ANNONCE`.`prix_depart` AS `prix_depart`,
-                    `ANNONCE`.`date_heure_fin` AS `date_heure_fin`,
-                    `ANNONCE`.`categorie_id` AS `categorie_id`,
-                    `ANNONCE`.`utilisateur_id` AS `utilisateur_id`
-                FROM `ANNONCE`
+                    `annonce`.`id` AS `id`,
+                    `annonce`.`titre` AS `titre`,
+                    `annonce`.`description` AS `description`,
+                    `annonce`.`etat` AS `etat`,
+                    `annonce`.`prix_depart` AS `prix_depart`,
+                    `annonce`.`date_heure_fin` AS `date_heure_fin`,
+                    `annonce`.`categorie_id` AS `categorie_id`,
+                    `annonce`.`utilisateur_id` AS `utilisateur_id`
+                FROM `annonce`
                 INNER JOIN (
                     SELECT
                         `annonce_id`,
                         MAX(`date_heure`) AS `derniere_enchere`
-                    FROM `ENCHERE`
+                    FROM `enchere`
                     GROUP BY `annonce_id`
                 ) AS `resume_enchere`
-                    ON `resume_enchere`.`annonce_id` = `ANNONCE`.`id`
-                WHERE `ANNONCE`.`date_heure_fin` > NOW()
+                    ON `resume_enchere`.`annonce_id` = `annonce`.`id`
+                WHERE `annonce`.`date_heure_fin` > NOW()
                 ORDER BY `resume_enchere`.`derniere_enchere` DESC
                 LIMIT 6";
 
@@ -132,39 +132,39 @@ class annonce extends _model
         // La jointure réunit les enchères afin de calculer le prix courant et leur nombre.
         // La sous-requête de PHOTO retient uniquement la première image de chaque annonce.
         $sql = "SELECT
-                    `ANNONCE`.`id` AS `id`,
-                    `ANNONCE`.`titre` AS `titre`,
-                    `ANNONCE`.`date_heure_fin` AS `date_heure_fin`,
-                    `ANNONCE`.`categorie_id` AS `categorie_id`,
-                    COALESCE(MAX(`ENCHERE`.`montant`), `ANNONCE`.`prix_depart`) AS `prix_courant`,
-                    COUNT(`ENCHERE`.`id`) AS `nombre_encheres`,
-                    (`ANNONCE`.`date_heure_fin` > NOW()) AS `vente_ouverte`,
-                    `PHOTO`.`nom` AS `nom_photo`
-                FROM `ANNONCE`
-                LEFT JOIN `ENCHERE`
-                    ON `ENCHERE`.`annonce_id` = `ANNONCE`.`id`
-                LEFT JOIN `PHOTO`
-                    ON `PHOTO`.`id` = (
-                        SELECT `PHOTO_PRINCIPALE`.`id`
-                        FROM `PHOTO` AS `PHOTO_PRINCIPALE`
-                        WHERE `PHOTO_PRINCIPALE`.`annonce_id` = `ANNONCE`.`id`
-                        ORDER BY `PHOTO_PRINCIPALE`.`position` ASC, `PHOTO_PRINCIPALE`.`id` ASC
+                    `annonce`.`id` AS `id`,
+                    `annonce`.`titre` AS `titre`,
+                    `annonce`.`date_heure_fin` AS `date_heure_fin`,
+                    `annonce`.`categorie_id` AS `categorie_id`,
+                    COALESCE(MAX(`enchere`.`montant`), `annonce`.`prix_depart`) AS `prix_courant`,
+                    COUNT(`enchere`.`id`) AS `nombre_encheres`,
+                    (`annonce`.`date_heure_fin` > NOW()) AS `vente_ouverte`,
+                    `photo`.`nom` AS `nom_photo`
+                FROM `annonce`
+                LEFT JOIN `enchere`
+                    ON `enchere`.`annonce_id` = `annonce`.`id`
+                LEFT JOIN `photo`
+                    ON `photo`.`id` = (
+                        SELECT `photo_principale`.`id`
+                        FROM `photo` AS `photo_principale`
+                        WHERE `photo_principale`.`annonce_id` = `annonce`.`id`
+                        ORDER BY `photo_principale`.`position` ASC, `photo_principale`.`id` ASC
                         LIMIT 1
                     )
                 " . $recherche['where'] . "
                 GROUP BY
-                    `ANNONCE`.`id`,
-                    `ANNONCE`.`titre`,
-                    `ANNONCE`.`prix_depart`,
-                    `ANNONCE`.`date_heure_fin`,
-                    `ANNONCE`.`categorie_id`,
-                    `PHOTO`.`nom`
+                    `annonce`.`id`,
+                    `annonce`.`titre`,
+                    `annonce`.`prix_depart`,
+                    `annonce`.`date_heure_fin`,
+                    `annonce`.`categorie_id`,
+                    `photo`.`nom`
                 " . $recherche['having'] . "
                 ORDER BY
-                    CASE WHEN `ANNONCE`.`date_heure_fin` > NOW() THEN 0 ELSE 1 END ASC,
-                    CASE WHEN `ANNONCE`.`date_heure_fin` > NOW() THEN `ANNONCE`.`date_heure_fin` END ASC,
-                    CASE WHEN `ANNONCE`.`date_heure_fin` <= NOW() THEN `ANNONCE`.`date_heure_fin` END DESC,
-                    `ANNONCE`.`id` DESC
+                    CASE WHEN `annonce`.`date_heure_fin` > NOW() THEN 0 ELSE 1 END ASC,
+                    CASE WHEN `annonce`.`date_heure_fin` > NOW() THEN `annonce`.`date_heure_fin` END ASC,
+                    CASE WHEN `annonce`.`date_heure_fin` <= NOW() THEN `annonce`.`date_heure_fin` END DESC,
+                    `annonce`.`id` DESC
                 LIMIT " . $limite_validee . " OFFSET " . $decalage_valide;
 
         $requete = $this->execute($sql, $recherche['parametres']);
@@ -186,14 +186,14 @@ class annonce extends _model
         // La requête intérieure calcule le prix courant de chaque annonce avant d'appliquer la fourchette.
         $sql = "SELECT COUNT(*) AS `total`
                 FROM (
-                    SELECT `ANNONCE`.`id`
-                    FROM `ANNONCE`
-                    LEFT JOIN `ENCHERE`
-                        ON `ENCHERE`.`annonce_id` = `ANNONCE`.`id`
+                    SELECT `annonce`.`id`
+                    FROM `annonce`
+                    LEFT JOIN `enchere`
+                        ON `enchere`.`annonce_id` = `annonce`.`id`
                     " . $recherche['where'] . "
-                    GROUP BY `ANNONCE`.`id`, `ANNONCE`.`prix_depart`
+                    GROUP BY `annonce`.`id`, `annonce`.`prix_depart`
                     " . $recherche['having'] . "
-                ) AS `ANNONCES_TROUVEES`";
+                ) AS `annonces_trouvees`";
 
         $resultat = $this->sqlToLigne($sql, $recherche['parametres']);
 
@@ -253,7 +253,7 @@ class annonce extends _model
         // Retour : true si l'association existe, sinon false.
         
         $sql = "SELECT COUNT(`id`) AS `nombre`
-                FROM `ASSO_UTILISATEUR_ANNONCE`
+                FROM `asso_utilisateur_annonce`
                 WHERE `annonce_id` = :annonce_id
                 AND `utilisateur_id` = :utilisateur_id";
 
@@ -284,7 +284,7 @@ class annonce extends _model
         $sql_annonce = "SELECT
                             `utilisateur_id`,
                             (`date_heure_fin` > NOW()) AS `vente_ouverte`
-                        FROM `ANNONCE`
+                        FROM `annonce`
                         WHERE `id` = :annonce_id
                         FOR UPDATE";
 
@@ -312,7 +312,7 @@ class annonce extends _model
             return 'deja_suivie';
         }
 
-        $sql_insertion = "INSERT INTO `ASSO_UTILISATEUR_ANNONCE`
+        $sql_insertion = "INSERT INTO `asso_utilisateur_annonce`
                             (`annonce_id`, `utilisateur_id`)
                           VALUES
                             (:annonce_id, :utilisateur_id)";
@@ -339,7 +339,7 @@ class annonce extends _model
         // Retour : Un code simple indique la réussite, l'absence de suivi ou une erreur.
         
         // Le DELETE contient les deux identifiants : un utilisateur ne peut retirer que sa propre association.
-        $sql = "DELETE FROM `ASSO_UTILISATEUR_ANNONCE`
+        $sql = "DELETE FROM `asso_utilisateur_annonce`
                 WHERE `annonce_id` = :annonce_id
                 AND `utilisateur_id` = :utilisateur_id";
 
@@ -365,35 +365,35 @@ class annonce extends _model
         // Retour : Un tableau de lignes agrégées destiné au tableau de bord, ou false en cas d'échec.
         
         $sql = "SELECT
-                    `ANNONCE`.`id`,
-                    `ANNONCE`.`titre`,
-                    `ANNONCE`.`date_heure_fin`,
-                    COALESCE(MAX(`ENCHERE`.`montant`), `ANNONCE`.`prix_depart`) AS `prix_courant`,
-                    COUNT(`ENCHERE`.`id`) AS `nombre_encheres`,
-                    (`ANNONCE`.`date_heure_fin` > NOW()) AS `vente_ouverte`,
-                    `PHOTO`.`nom` AS `nom_photo`
-                FROM `ANNONCE`
-                LEFT JOIN `ENCHERE`
-                    ON `ENCHERE`.`annonce_id` = `ANNONCE`.`id`
-                LEFT JOIN `PHOTO`
-                    ON `PHOTO`.`id` = (
-                        SELECT `PHOTO_PRINCIPALE`.`id`
-                        FROM `PHOTO` AS `PHOTO_PRINCIPALE`
-                        WHERE `PHOTO_PRINCIPALE`.`annonce_id` = `ANNONCE`.`id`
-                        ORDER BY `PHOTO_PRINCIPALE`.`position` ASC, `PHOTO_PRINCIPALE`.`id` ASC
+                    `annonce`.`id`,
+                    `annonce`.`titre`,
+                    `annonce`.`date_heure_fin`,
+                    COALESCE(MAX(`enchere`.`montant`), `annonce`.`prix_depart`) AS `prix_courant`,
+                    COUNT(`enchere`.`id`) AS `nombre_encheres`,
+                    (`annonce`.`date_heure_fin` > NOW()) AS `vente_ouverte`,
+                    `photo`.`nom` AS `nom_photo`
+                FROM `annonce`
+                LEFT JOIN `enchere`
+                    ON `enchere`.`annonce_id` = `annonce`.`id`
+                LEFT JOIN `photo`
+                    ON `photo`.`id` = (
+                        SELECT `photo_principale`.`id`
+                        FROM `photo` AS `photo_principale`
+                        WHERE `photo_principale`.`annonce_id` = `annonce`.`id`
+                        ORDER BY `photo_principale`.`position` ASC, `photo_principale`.`id` ASC
                         LIMIT 1
                     )
-                WHERE `ANNONCE`.`utilisateur_id` = :utilisateur_id
+                WHERE `annonce`.`utilisateur_id` = :utilisateur_id
                 GROUP BY
-                    `ANNONCE`.`id`,
-                    `ANNONCE`.`titre`,
-                    `ANNONCE`.`prix_depart`,
-                    `ANNONCE`.`date_heure_fin`,
-                    `PHOTO`.`nom`
+                    `annonce`.`id`,
+                    `annonce`.`titre`,
+                    `annonce`.`prix_depart`,
+                    `annonce`.`date_heure_fin`,
+                    `photo`.`nom`
                 ORDER BY
-                    CASE WHEN `ANNONCE`.`date_heure_fin` > NOW() THEN 0 ELSE 1 END,
-                    CASE WHEN `ANNONCE`.`date_heure_fin` > NOW() THEN `ANNONCE`.`date_heure_fin` END ASC,
-                    CASE WHEN `ANNONCE`.`date_heure_fin` <= NOW() THEN `ANNONCE`.`date_heure_fin` END DESC";
+                    CASE WHEN `annonce`.`date_heure_fin` > NOW() THEN 0 ELSE 1 END,
+                    CASE WHEN `annonce`.`date_heure_fin` > NOW() THEN `annonce`.`date_heure_fin` END ASC,
+                    CASE WHEN `annonce`.`date_heure_fin` <= NOW() THEN `annonce`.`date_heure_fin` END DESC";
 
         $requete = $this->execute($sql, [
             ':utilisateur_id' => $utilisateur_id
@@ -413,63 +413,63 @@ class annonce extends _model
 
         // Les sous-requêtes vérifient les relations sans dupliquer les lignes d'enchères utilisées pour les calculs.
         $sql = "SELECT
-                    `ANNONCE`.`id`,
-                    `ANNONCE`.`titre`,
-                    `ANNONCE`.`date_heure_fin`,
-                    COALESCE(MAX(`ENCHERE`.`montant`), `ANNONCE`.`prix_depart`) AS `prix_courant`,
-                    COUNT(`ENCHERE`.`id`) AS `nombre_encheres`,
-                    (`ANNONCE`.`date_heure_fin` > NOW()) AS `vente_ouverte`,
+                    `annonce`.`id`,
+                    `annonce`.`titre`,
+                    `annonce`.`date_heure_fin`,
+                    COALESCE(MAX(`enchere`.`montant`), `annonce`.`prix_depart`) AS `prix_courant`,
+                    COUNT(`enchere`.`id`) AS `nombre_encheres`,
+                    (`annonce`.`date_heure_fin` > NOW()) AS `vente_ouverte`,
                     MAX(CASE
-                        WHEN `ENCHERE`.`utilisateur_id` = :utilisateur_id_position
-                        THEN `ENCHERE`.`montant`
+                        WHEN `enchere`.`utilisateur_id` = :utilisateur_id_position
+                        THEN `enchere`.`montant`
                     END) AS `meilleur_montant_utilisateur`,
                     SUM(CASE
-                        WHEN `ENCHERE`.`utilisateur_id` = :utilisateur_id_nombre
+                        WHEN `enchere`.`utilisateur_id` = :utilisateur_id_nombre
                         THEN 1 ELSE 0
                     END) AS `nombre_encheres_utilisateur`,
                     EXISTS(
                         SELECT 1
-                        FROM `ASSO_UTILISATEUR_ANNONCE`
-                        WHERE `ASSO_UTILISATEUR_ANNONCE`.`annonce_id` = `ANNONCE`.`id`
-                        AND `ASSO_UTILISATEUR_ANNONCE`.`utilisateur_id` = :utilisateur_id_suivi
+                        FROM `asso_utilisateur_annonce`
+                        WHERE `asso_utilisateur_annonce`.`annonce_id` = `annonce`.`id`
+                        AND `asso_utilisateur_annonce`.`utilisateur_id` = :utilisateur_id_suivi
                     ) AS `suivi_volontaire`,
-                    `PHOTO`.`nom` AS `nom_photo`
-                FROM `ANNONCE`
-                LEFT JOIN `ENCHERE`
-                    ON `ENCHERE`.`annonce_id` = `ANNONCE`.`id`
-                LEFT JOIN `PHOTO`
-                    ON `PHOTO`.`id` = (
-                        SELECT `PHOTO_PRINCIPALE`.`id`
-                        FROM `PHOTO` AS `PHOTO_PRINCIPALE`
-                        WHERE `PHOTO_PRINCIPALE`.`annonce_id` = `ANNONCE`.`id`
-                        ORDER BY `PHOTO_PRINCIPALE`.`position` ASC, `PHOTO_PRINCIPALE`.`id` ASC
+                    `photo`.`nom` AS `nom_photo`
+                FROM `annonce`
+                LEFT JOIN `enchere`
+                    ON `enchere`.`annonce_id` = `annonce`.`id`
+                LEFT JOIN `photo`
+                    ON `photo`.`id` = (
+                        SELECT `photo_principale`.`id`
+                        FROM `photo` AS `photo_principale`
+                        WHERE `photo_principale`.`annonce_id` = `annonce`.`id`
+                        ORDER BY `photo_principale`.`position` ASC, `photo_principale`.`id` ASC
                         LIMIT 1
                     )
-                WHERE `ANNONCE`.`utilisateur_id` <> :utilisateur_id_proprietaire
+                WHERE `annonce`.`utilisateur_id` <> :utilisateur_id_proprietaire
                 AND (
                     EXISTS(
                         SELECT 1
-                        FROM `ASSO_UTILISATEUR_ANNONCE` AS `SUIVI`
-                        WHERE `SUIVI`.`annonce_id` = `ANNONCE`.`id`
+                        FROM `asso_utilisateur_annonce` AS `SUIVI`
+                        WHERE `SUIVI`.`annonce_id` = `annonce`.`id`
                         AND `SUIVI`.`utilisateur_id` = :utilisateur_id_relation
                     )
                     OR EXISTS(
                         SELECT 1
-                        FROM `ENCHERE` AS `PARTICIPATION`
-                        WHERE `PARTICIPATION`.`annonce_id` = `ANNONCE`.`id`
+                        FROM `enchere` AS `PARTICIPATION`
+                        WHERE `PARTICIPATION`.`annonce_id` = `annonce`.`id`
                         AND `PARTICIPATION`.`utilisateur_id` = :utilisateur_id_participation
                     )
                 )
                 GROUP BY
-                    `ANNONCE`.`id`,
-                    `ANNONCE`.`titre`,
-                    `ANNONCE`.`prix_depart`,
-                    `ANNONCE`.`date_heure_fin`,
-                    `PHOTO`.`nom`
+                    `annonce`.`id`,
+                    `annonce`.`titre`,
+                    `annonce`.`prix_depart`,
+                    `annonce`.`date_heure_fin`,
+                    `photo`.`nom`
                 ORDER BY
-                    CASE WHEN `ANNONCE`.`date_heure_fin` > NOW() THEN 0 ELSE 1 END,
-                    CASE WHEN `ANNONCE`.`date_heure_fin` > NOW() THEN `ANNONCE`.`date_heure_fin` END ASC,
-                    CASE WHEN `ANNONCE`.`date_heure_fin` <= NOW() THEN `ANNONCE`.`date_heure_fin` END DESC";
+                    CASE WHEN `annonce`.`date_heure_fin` > NOW() THEN 0 ELSE 1 END,
+                    CASE WHEN `annonce`.`date_heure_fin` > NOW() THEN `annonce`.`date_heure_fin` END ASC,
+                    CASE WHEN `annonce`.`date_heure_fin` <= NOW() THEN `annonce`.`date_heure_fin` END DESC";
 
         $requete = $this->execute($sql, [
             ':utilisateur_id_position' => $utilisateur_id,
@@ -494,20 +494,20 @@ class annonce extends _model
         
         // Le nombre d'enchères est calculé sans charger leurs données privées.
         $sql = "SELECT
-                    `ANNONCE`.`id`,
-                    `ANNONCE`.`titre`,
-                    `ANNONCE`.`description`,
-                    `ANNONCE`.`etat`,
-                    `ANNONCE`.`prix_depart`,
-                    `ANNONCE`.`date_heure_fin`,
-                    `ANNONCE`.`categorie_id`,
-                    `ANNONCE`.`utilisateur_id`,
+                    `annonce`.`id`,
+                    `annonce`.`titre`,
+                    `annonce`.`description`,
+                    `annonce`.`etat`,
+                    `annonce`.`prix_depart`,
+                    `annonce`.`date_heure_fin`,
+                    `annonce`.`categorie_id`,
+                    `annonce`.`utilisateur_id`,
                     (SELECT COUNT(*)
-                     FROM `ENCHERE`
-                     WHERE `ENCHERE`.`annonce_id` = `ANNONCE`.`id`) AS `nombre_encheres`,
-                    (`ANNONCE`.`date_heure_fin` > NOW()) AS `vente_ouverte`
-                FROM `ANNONCE`
-                WHERE `ANNONCE`.`id` = :annonce_id";
+                     FROM `enchere`
+                     WHERE `enchere`.`annonce_id` = `annonce`.`id`) AS `nombre_encheres`,
+                    (`annonce`.`date_heure_fin` > NOW()) AS `vente_ouverte`
+                FROM `annonce`
+                WHERE `annonce`.`id` = :annonce_id";
 
         // FOR UPDATE est ajouté uniquement par la méthode interne et jamais depuis une donnée utilisateur.
         if ($avec_verrou === true) {
@@ -534,36 +534,36 @@ class annonce extends _model
             $repere_titre = ':mot_titre_' . $numero;
             $repere_description = ':mot_description_' . $numero;
             $mot_protege = str_replace(['=', '%', '_'], ['==', '=%', '=_'], $mot);
-            $conditions_where[] = "(`ANNONCE`.`titre` LIKE " . $repere_titre . " ESCAPE '=' OR `ANNONCE`.`description` LIKE " . $repere_description . " ESCAPE '=')";
+            $conditions_where[] = "(`annonce`.`titre` LIKE " . $repere_titre . " ESCAPE '=' OR `annonce`.`description` LIKE " . $repere_description . " ESCAPE '=')";
             $parametres[$repere_titre] = '%' . $mot_protege . '%';
             $parametres[$repere_description] = '%' . $mot_protege . '%';
         }
 
         if ($criteres['categorie_id'] !== '') {
-            $conditions_where[] = '`ANNONCE`.`categorie_id` = :categorie_id';
+            $conditions_where[] = '`annonce`.`categorie_id` = :categorie_id';
             $parametres[':categorie_id'] = $criteres['categorie_id'];
         }
 
         if ($criteres['etat'] !== '') {
-            $conditions_where[] = '`ANNONCE`.`etat` = :etat';
+            $conditions_where[] = '`annonce`.`etat` = :etat';
             $parametres[':etat'] = $criteres['etat'];
         }
 
         if ($criteres['statut'] === 'en_cours') {
-            $conditions_where[] = '`ANNONCE`.`date_heure_fin` > NOW()';
+            $conditions_where[] = '`annonce`.`date_heure_fin` > NOW()';
         }
 
         if ($criteres['statut'] === 'terminees') {
-            $conditions_where[] = '`ANNONCE`.`date_heure_fin` <= NOW()';
+            $conditions_where[] = '`annonce`.`date_heure_fin` <= NOW()';
         }
 
         if ($criteres['prix_minimum'] !== '') {
-            $conditions_having[] = 'COALESCE(MAX(`ENCHERE`.`montant`), `ANNONCE`.`prix_depart`) >= :prix_minimum';
+            $conditions_having[] = 'COALESCE(MAX(`enchere`.`montant`), `annonce`.`prix_depart`) >= :prix_minimum';
             $parametres[':prix_minimum'] = $criteres['prix_minimum'];
         }
 
         if ($criteres['prix_maximum'] !== '') {
-            $conditions_having[] = 'COALESCE(MAX(`ENCHERE`.`montant`), `ANNONCE`.`prix_depart`) <= :prix_maximum';
+            $conditions_having[] = 'COALESCE(MAX(`enchere`.`montant`), `annonce`.`prix_depart`) <= :prix_maximum';
             $parametres[':prix_maximum'] = $criteres['prix_maximum'];
         }
 

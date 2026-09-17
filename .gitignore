@@ -1,13 +1,16 @@
 # Configuration locale et secrets
 config.php
 !config.example.php
+
+config.localhost.laragon.php
+config.webecom.php
+
 .env
 .env.*
 !.env.example
 
 # Configuration des éditeurs
 .vscode/
-.vscode/command-buttons.json
 .idea/
 
 # Journaux et fichiers temporaires

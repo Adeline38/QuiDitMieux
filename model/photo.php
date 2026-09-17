@@ -7,7 +7,7 @@
 class photo extends _model
 {
     // Ces informations relient ce modèle à la table PHOTO et limitent les colonnes qu'il peut manipuler.
-    protected $table = 'PHOTO';
+    protected $table = 'photo';
 
     protected $fields = [
         'nom',
@@ -33,7 +33,7 @@ class photo extends _model
         // Retour : Un tableau d'objets photo, ou un tableau vide si aucune photographie n'existe.
         
         $sql = "SELECT `id`, `nom`, `position`, `annonce_id`
-                FROM `PHOTO`
+                FROM `photo`
                 WHERE `annonce_id` = :annonce_id
                 ORDER BY `position` ASC, `id` ASC";
 
@@ -50,7 +50,7 @@ class photo extends _model
         
         // Le classement par position puis par identifiant rend le choix stable lorsqu'une annonce possède plusieurs photos.
         $sql = "SELECT `id`, `nom`, `position`, `annonce_id`
-                FROM `PHOTO`
+                FROM `photo`
                 WHERE `annonce_id` = :annonce_id
                 ORDER BY `position` ASC, `id` ASC
                 LIMIT 1";
