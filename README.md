@@ -110,10 +110,10 @@ Copy-Item config.example.php config.php
 Compléter ensuite dans `config.php` :
 
 ```php
-$GLOBALS['bdd_host'] = '...';
-$GLOBALS['bdd_base'] = 'qdm-adeline';
-$GLOBALS['bdd_user'] = '...';
-$GLOBALS['bdd_pwd'] = '...';
+$GLOBALS['bdd_host'] = '';
+$GLOBALS['bdd_base'] = '';
+$GLOBALS['bdd_user'] = '';
+$GLOBALS['bdd_pwd'] = '';
 ```
 
 IMPORTANT : `config.php` est ignoré par Git afin de ne pas publier les identifiants.
